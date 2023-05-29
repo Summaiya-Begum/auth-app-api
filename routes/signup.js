@@ -17,13 +17,12 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-
-
 signupRouter.post(
   "/register",
   upload.single("profilePicture"),
   async (req, res) => {
-    const { password, email, name, phoneNumber, gender,profilePicture } = req.body;
+    const { password, email, name, phoneNumber, gender, profilePicture } =
+      req.body;
 
     try {
       let user = await userModel.findOne({ email });
@@ -44,7 +43,7 @@ signupRouter.post(
             password: hash,
             phoneNumber,
             gender,
-            profilePicture
+            profilePicture,
           });
 
           if (req.file) {
@@ -65,34 +64,6 @@ signupRouter.post(
   }
 );
 
-signupRouter.put(
-  "/update-profile",
-  upload.single("profilePicture"),
-  async (req, res) => {
-    const { name, phoneNumber, gender } = req.body;
-    const { userId } = req.user;
 
-    try {
-      let user = await userModel.findById(userId);
-      if (!user) {
-        return res.status(404).json({ msg: "User not found" });
-      }
-
-      user.name = name || user.name;
-      user.phoneNumber = phoneNumber || user.phoneNumber;
-      user.gender = gender || user.gender;
-      if (req.file) {
-        user.profilePicture = req.file.path;
-      }
-
-      await user.save();
-
-      return res.json({ msg: "User profile updated successfully" });
-    } catch (err) {
-      console.error("An error occurred:", err);
-      return res.status(500).json({ msg: "Internal server error" });
-    }
-  }
-);
 
 module.exports = signupRouter;

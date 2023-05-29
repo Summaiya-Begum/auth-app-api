@@ -41,6 +41,20 @@ profileRouter.get("/users", async (req, res) => {
     return res.status(500).json({ msg: "Internal server error" });
   }
 });
+profileRouter.get("/:id", async (req, res) => {
+  
+  const {id} = req.params
+  try {
+    const user = await userModel.findById(id);
+    return res.json({
+      message: "current user",
+      user,
+    });
+  } catch (err) {
+    console.error("An error occurred:", err);
+    return res.status(500).json({ msg: "Internal server error" });
+  }
+});
 
 profileRouter.patch("/update", authentication, async (req, res) => {
   const { userId } = req.body;
