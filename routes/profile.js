@@ -13,12 +13,14 @@ profileRouter.get("/", async (req, res) => {
       return res.status(404).json({ msg: "User not found" });
     }
 
-    const { name, phoneNumber, gender, profile } = user;
+    const {email, name, phoneNumber, gender,profilePicture,
+    } = user;
     const profileData = {
+      email,
       name,
       phoneNumber,
       gender,
-      profile,
+      profilePicture,
     };
 
     return res.json(profileData);
@@ -42,7 +44,7 @@ profileRouter.get("/users", async (req, res) => {
   }
 });
 profileRouter.get("/:id", async (req, res) => {
-  
+
   const {id} = req.params
   try {
     const user = await userModel.findById(id);
@@ -64,13 +66,13 @@ profileRouter.patch("/update", authentication, async (req, res) => {
       return res.status(404).json({ msg: "User not found" });
     }
 
-    const { name, phoneNumber, gender, profile, email } = req.body;
+    const { name, phoneNumber, gender, profilePicture, email } = req.body;
     const profileData = {
       email,
       name,
       phoneNumber,
       gender,
-      profile,
+      profilePicture,
     };
     const update = await userModel.findOneAndUpdate(
       { _id: userId },
